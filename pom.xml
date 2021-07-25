@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <!-- Pom模型版本 -->
+    <modelVersion>4.0.0</modelVersion>
+    <!--
+        打包方式：
+            pom：是maven依赖文件,通常作为其他项目的maven依赖,用作版本控制;
+            jar：是java普通项目打包;
+            war：是java web项目打包;
+    -->
+    <packaging>pom</packaging>
+    <!-- 子模块 -->
+    <modules>
+        <module>test-service</module>
+        <module>index-service</module>
+        <module>eureka-service</module>
+    </modules>
+    <!-- 父工程 -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.5.2</version>
+    </parent>
+    <!-- 工程信息 -->
+    <groupId>org.eleven</groupId>
+    <artifactId>spring-cloud</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <!-- 版本控制 -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+    </properties>
+    <!--
+        <dependencies></dependencies>
+            即使在子项目中不写该依赖项,那么子项目仍然会从父项目中继承该依赖项（全部继承）;
+        <dependencyManagement></dependencyManagement>
+            只是声明依赖，并不实现引入，因此子项目需要显式的声明需要用的依赖;如果不在子项目中声明依赖，是不会从父项目中继承下来的;
+            只有在子项目中写了该依赖项，并且没有指定具体版本，才会从父项目中继承该项，并且version和scope都读取自父pom;
+            另外如果子项目中指定了版本号，那么会使用子项目中指定的jar版本。
+    -->
+    <!-- 依赖管理 -->
+    <dependencies>
+        <!-- web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- logging -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+        </dependency>
+        <!-- 集成测试 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.20</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- json -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.62</version>
+        </dependency>
+    </dependencies>
+    <!-- 依赖管理 -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- spring-cloud -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <!-- 版本要与Sring Boot版本对应 -->
+                <version>2020.0.3</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <!--
+        [Maven仓库]
+        Maven仓库就是放置所有JAR文件（WAR，ZIP，POM等等）的地方,所有Maven项目可以从同一个Maven仓库中获取自己所需要的依赖JAR，这节省了磁盘资源.
+        此外，由于Maven仓库中所有的JAR都有其自己的坐标，该坐标告诉Maven它的组ID，构件ID，版本，打包方式等等，因此Maven项目可以方便的进行依赖版本管理.
+        运行Maven的时候，Maven所需要的任何构件都是直接从本地仓库获取的.如果本地仓库没有，它会首先尝试从远程仓库下载构件至本地仓库，然后再使用本地仓库的构件.
+        [全局配置-全部项目]
+        可以采用镜像的方式配置远程仓库,镜像在settings.xml中进行配置,在setting.xml中的<mirrors>标签下配置maven镜像.
+        添加配置后,maven会读取setting.xml中配置的mirror作为jar包的下载地址.
+        如下，配置了mirror后，maven是从aliyun仓库下载的jar包，不配置的时候，默认从apache的maven中央仓库下载的jar包.
+        ==========================================================================================================================
+        |   <mirror>                                                                                                             |
+        |       <id>alimaven</id>                                                                                                |
+        |       <name>aliyun maven</name>                                                                                        |
+        |       <mirrorOf>central</mirrorOf>                                                                                     |
+        |       <url>http://maven.aliyun.com/nexus/content/groups/public/</url>                                                  |
+        |   </mirror>                                                                                                            |
+        ==========================================================================================================================
+        [全局配置-当前项目]
+        通过setting.xml方式配置会对所有maven项目生效,如果只想在本项目中配置一个maven仓库,可以通过在pom.xml中配置<repositories>标签来实现.
+        在自己的maven项目的pom.xml中添加如下配置,就配置好了一个仓库.这时候,maven会优先采用这个配置,而不会去读setting.xml中的配置.
+        ==========================================================================================================================
+        |   <repositories>                                                                                                       |
+        |       <repository>                                                                                                     |
+        |           <id>aliyun-releases</id>                                                                                     |
+        |           <name>aliyun maven</name>                                                                                    |
+        |           <url>https://maven.aliyun.com/repository/public</url>                                                        |
+        |       </repository>                                                                                                    |
+        |   </repositories>                                                                                                      |
+        ==========================================================================================================================
+        repositories标签下可以配置多个repository,如果配置了多个repository,按出现顺序使用,如果第一个可用,用第一个,如果不可用,就依次往下找.
+    -->
+    <!-- Maven仓库 -->
+    <repositories>
+        <repository>
+            <id>aliyun-releases</id>
+            <name>Aliyun Repository</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+        </repository>
+        <repository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshots</name>
+            <url>http://repo.spring.io/libs-snapshot-local</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>http://repo.spring.io/libs-milestone-local</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-releases</id>
+            <name>Spring Releases</name>
+            <url>http://repo.spring.io/libs-release-local</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <!-- 插件仓库 -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshots</name>
+            <url>http://repo.spring.io/libs-snapshot-local</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>http://repo.spring.io/libs-milestone-local</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+    <!-- 项目构建 -->
+    <build>
+        <!-- 项目构建用到的插件 -->
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>9</source>
+                    <target>9</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
