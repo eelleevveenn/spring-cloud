@@ -1,0 +1,42 @@
+// 配置本地账户信息
+git config --global user.name '[name]'
+git config --gloabl user.email '[email]'
+
+// 本地初始化一个git项目
+git init
+// 克隆一个远程仓库，比如GitHub
+git clone [url]
+// 关联到一个远程仓库
+git remote add origin [url]
+// 获取远程仓库
+git remote -v
+// 删除远程仓库
+git remote rm origin
+
+// 将所有的改动计入暂存区
+git add .
+// 将所有更改加入版本历史，并说明
+git commit -m '[desc msg]'
+// 远程仓库中拉取代码到本地
+git clone [remote url]
+// 从远程分支拉取更改
+git pull
+// 将本地更改提交到远程仓库
+git push
+
+// 列出本地已经存在的分支，当前分支前面加“*”号标记
+git branch
+// 列出远程分支
+git branch -r
+// 创建一个分支
+git branch [name]
+// 重命名分支，如果newbranch名字分支已经存在，则需要使用-M强制重命名，否则，使用-m进行重命名。
+git branch -m | -M oldbranch newbranch
+// 切换到另一个分支
+git checkout [branch-name]
+// 合并指定分支到当前分支上
+git merge [branch-name]
+// 删除一个指定分支
+git branch -d [branch-name]
+// 本地分支和远程分支建立联系
+git push --set-upstream origin master
