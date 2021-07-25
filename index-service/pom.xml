@@ -12,6 +12,8 @@
     <modelVersion>4.0.0</modelVersion>
     <!-- 组件ID:当前模块 -->
     <artifactId>index-service</artifactId>
+    <!-- 打包方式 -->
+    <packaging>jar</packaging>
     <!-- 依赖管理:当前模块 -->
     <dependencies>
         <!-- eureka client -->
@@ -20,4 +22,16 @@
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
     </dependencies>
+    <!-- 项目构建 -->
+    <build>
+        <!-- 打包后项目名 -->
+        <finalName>index</finalName>
+        <!-- 打包插件 -->
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>
